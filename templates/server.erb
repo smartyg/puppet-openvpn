@@ -36,7 +36,7 @@ crl-verify <%= @extca_ca_crl_file %>
 ca <%= @server_directory %>/<%= @ca_name %>/keys/ca.crt
 cert <%= @server_directory %>/<%= @ca_name %>/keys/<%= @ca_common_name %>.crt
 key <%= @server_directory %>/<%= @ca_name %>/keys/<%= @ca_common_name %>.key
-<%- else -%>
+<%- elsif ! @disable_certs -%>
 ca <%= @server_directory %>/<%= @ca_name %>/keys/ca.crt
 cert <%= @server_directory %>/<%= @ca_name %>/keys/issued/<%= @ca_common_name %>.crt
 key <%= @server_directory %>/<%= @ca_name %>/keys/private/<%= @ca_common_name %>.key

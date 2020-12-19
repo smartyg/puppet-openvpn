@@ -114,6 +114,7 @@
 #  ```
 #
 # @param custom_options Hash of additional options to append to the configuration file.
+# @param disable_certs Set to true to completely disable the use of certificates (ca, cert and key).
 #
 # @example install
 #   openvpn::server { 'winterthur':
@@ -243,6 +244,7 @@ define openvpn::server (
   Optional[String] $secret                                          = undef,
   Hash[String, Hash] $scripts                                       = {},
   Hash $custom_options                                              = {},
+  Boolean $disable_certs                                            = false,
 ) {
   include openvpn
   Class['openvpn::install']
