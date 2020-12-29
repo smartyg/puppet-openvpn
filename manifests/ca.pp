@@ -62,13 +62,35 @@ define openvpn::ca (
   })
 
   file { "${server_directory}/${name}/easy-rsa" :
-    ensure             => directory,
-    recurse            => true,
-    links              => 'follow',
+    ensure  => directory,
+    mode    => '0750',
+    owner   => 'root',
+    group   => 'root',
+    require => File["${server_directory}/${name}"],
+  }
+
+  file { "${server_directory}/${name}/easy-rsa/easyrsa" :
+    ensure             => file,
     source_permissions => 'use',
     group              => 0,
     source             => "file:${openvpn::easyrsa_source}",
-    require            => File["${server_directory}/${name}"],
+    require            => File["${server_directory}/${name}/easy-rsa"],
+  }
+
+  file { "${server_directory}/${name}/easy-rsa/keys" :
+    ensure  => directory,
+    mode    => '0750',
+    owner   => 'root',
+    group   => 'root',
+    require => File["${server_directory}/${name}/easy-rsa"],
+  }
+
+  file { "${server_directory}/${name}/easy-rsa/openssl.cnf" :
+    ensure             => file,
+    source_permissions => 'use',
+    group              => 0,
+    source             => "file:/etc/easy-rsa/openssl-easyrsa.cnf",
+    require            => File["${server_directory}/${name}/easy-rsa"],
   }
 
   file { "${server_directory}/${name}/easy-rsa/revoked":
@@ -202,10 +224,6 @@ define openvpn::ca (
     default: {
       fail("unexepected value for EasyRSA version, got '${openvpn::easyrsa_version}', expect 2.0 or 3.0.")
     }
-  }
-
-  file { "${server_directory}/${name}/easy-rsa/openssl.cnf":
-    require => File["${server_directory}/${name}/easy-rsa"],
   }
 
   file { "${server_directory}/${name}/keys":
